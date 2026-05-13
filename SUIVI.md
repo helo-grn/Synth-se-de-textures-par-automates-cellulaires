@@ -35,3 +35,18 @@ Proposition d'architecture, ajouts de fichiers de code qui définissent l'archit
 Importation dans loss.py du modèle VGG préexistant dans pytorch, voir la documentation: https://docs.pytorch.org/vision/stable/models/generated/torchvision.models.vgg16.html 
 NB: j'ai importé le modèle dans la fonction déstinée à cela et bloqué les paramètres vu qu'on ne va pas l'entrainer. Il est déja entrainé sur IMAGENET, qui contient pleins de textures différentes donc qui est assez approprié.
 Code pour calculer les matrices de Gram et la VGG loss
+
+# Réunion 2: 13/05
+
+### Prochaine réunion: 20/05 
+
+Compte rendu oral da la semaine passée.
+VGG venue de l'article de Gatis: code récupéré sur son github pour ce loss. Code un peu vieux, possibles problèmes de compatibilité.
+Nouvelle source pour le code de cette partie: https://storimaging.github.io/notebooksImageGeneration/ 
+explication du système de couches et paires... cf papier - layer spécifiques, pas premières couches trop simples ni trop sémantiques (dernières): entre deux. 
+NB: tests de loss potentiels, montrer pourquoi cette combinaison loss/architecture marche.
+Code sur les matrices de Gram a identifier, tests potentiellement un peu lents.
+
+Question: Page 4, tirage aléatoire d'un N, pourquoi cela? Diversité... - à revenir/comprendre (ourquoi on change à chaque fois)
+
+### Objectif de la semaine: architecture globale et premiers tests, ainsi que prise en main de la source envoyée.
