@@ -40,7 +40,7 @@ def get_grams(img):    #sera appele dans main pr calculer les target_grams
     target_grams = []
     N = []
     x = img
-    for i, layer in enumerate(vgg):
+    for i, layer in enumerate(model):
         x = layer(x)
         if i in [1, 6, 11, 18]: #relu1,2,3,4
             target_grams.append(gram_matrix(x))
