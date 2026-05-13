@@ -32,3 +32,4 @@ Première approche de l'importation du loss/modèle VGG. Prise en main des papie
 # Semaine du 06/05 au 13/05
 
 Proposition d'architecture, ajouts de fichiers de code qui définissent l'architecture du projet (non finis).
+Importation dans loss.py du modèle VGG préexistant dans pytorch, voir la documentation: https://docs.pytorch.org/vision/stable/models/generated/torchvision.models.vgg16.html 
