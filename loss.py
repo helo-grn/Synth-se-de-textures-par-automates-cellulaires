@@ -25,6 +25,12 @@ def get_target_grams(img):    #sera appele dans main pr calculer les target_gram
     img taille (1, 3, H, W) en [0, 1], on return target_grams (liste de 4 Gram)
     """
     # TODO
+
+    #chargement vgg (modèle pytorch pour commencer?)
+    model = tv.vgg16(weigjts = models.VGG16_Weights.IMAGENET1K_V1).features
+    for p in model.parameters():
+        p.requires_grad = False #bloque psk on utilise préentrainé
+    
     raise NotImplementedError
 
 
