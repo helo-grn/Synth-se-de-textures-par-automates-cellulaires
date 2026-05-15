@@ -7,6 +7,11 @@ from config import *
 
 # fonctions similaires à http://colab.research.google.com/github/storimaging/Notebooks/blob/main/ImageGeneration/Style_Transfer.ipynb#scrollTo=CHKjVMHpYgkd
 
+def normalize(x):
+    mean = torch.tensor(MEAN, device=x.device).view(1, 3, 1, 1)
+    std  = torch.tensor(STD,  device=x.device).view(1, 3, 1, 1)
+    return (x - mean) / std
+
 
 def gram_matrix(tnsr):
     """
@@ -23,22 +28,21 @@ def gram_matrix(tnsr):
 
 #charge VGG16 : fonction a part car avant on chargait a chaque calcul
 def get_vgg():
-    vgg = tv.vgg16( weights=tv.models.VGG16_Weights.IMAGENET1K_V1).features.eval()
-
+    vgg = tv.vgg16(weights=tv.VGG16_Weights.IMAGENET1K_V1).features.eval()
     for p in vgg.parameters():
         p.requires_grad = False #bloque psk on utilise préentrainé
 
     return vgg
 
 
-VGG = get_vgg()
+VGG = get_vgg().to(device) 
 
 
 
 def get_target_grams(img): #sera appele dans main pr calculer les target_grams
 
     grams = []
-    x = img
+    x = normalize(img)
     for i, layer in enumerate(VGG):
         x = layer(x)
         if i in LAYERS:
@@ -61,7 +65,7 @@ def texture_loss(y_pred, target_grams, weights=[1., 1., 1., 1.]): #sera appele d
     pred_grams = get_target_grams(y_pred)
     loss = 0
     for G, A, w in zip(pred_grams, target_grams, weights):
-
-        loss += w * F.mse_loss(G, A)
+        loss += w * sum(F.mse_loss(G[i], A[0]) for i in range(G.shape[0])) #G de shape (B, C, C) et A de shape (1, C, C) 
+        #loss += w * F.mse_loss(G, A)
 
     return loss
