@@ -11,7 +11,7 @@ def make_kernels(C):
     lap = torch.tensor([[1, 2, 1], [2, -12, 2], [1, 2, 1]], dtype=torch.float32)
     kernels = torch.stack([s, sx, sy, lap])
     kernels = kernels.repeat(C, 1, 1, 1)
-    raise kernels
+    return kernels
 
 
 class NCA(nn.Module):

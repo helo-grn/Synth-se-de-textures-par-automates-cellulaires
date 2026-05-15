@@ -1,16 +1,9 @@
-# Environnements virtuels
-venv/
-.venv/
-
-# Python
+output/
+dtd/
+*.pth
 __pycache__/
 *.pyc
-*.pyo
-*.pyd
-
-# VS Code
-.vscode/
-
-# OS
+.env
+venv/
 .DS_Store
-Thumbs.db
+.vscode/

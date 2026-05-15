@@ -5,7 +5,7 @@ import torch.nn.functional as F
 from config import *
 from loss import texture_loss
 from utils import save_image
-
+from tqdm import tqdm
 
 #surtout la section 3.2
 
@@ -31,7 +31,7 @@ def sample_pool(pool, batch_size):
     return batch, idx
 
 
-def train(nca, target_grams, steps, batch, H, W):
+def train(nca, target_grams, steps, batch, H, W, device):
     """
     boucle d'entrainement 
 
@@ -41,11 +41,11 @@ def train(nca, target_grams, steps, batch, H, W):
 
     #regarder texture_loss dans loss.py et mettre les bons parametres
 
-    pool = make_pool()
+    pool = make_pool().to(device)
     optimizer = optim.Adam(nca.parameters(), lr=2e-3)
     
 
-    for step in range(steps):
+    for step in tqdm(range(steps)):
 
         if step == 2000:
             for param_group in optimizer.param_groups:
@@ -54,13 +54,14 @@ def train(nca, target_grams, steps, batch, H, W):
         states, idx = sample_pool(pool, batch)
         n=random.randint(32, 64) 
         states = nca(states, steps=n) 
+        states = states.clamp(0, 1)  #debug j avais des inf
         loss = texture_loss(states[:,:3,:,:], target_grams)
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
 
-        pool[idx] = states #maj du pool avec les nouveaux etats
+        pool[idx] = states.detach() #maj du pool avec les nouveaux etats
         if step % 200 == 0:
-            print(f"step {step} ; loss {loss.item():.4f}")
-            save_image(states[:,:3,:,:], f"{OUT_DIR}/step_{step}.png") #enregistrer que rgb pour visualiser les images
+            print(f"step {step} ; loss {loss.item()}")
+            save_image(states[0,:3,:,:], f"{OUT_DIR}/step_{step}.png") #enregistrer que rgb pour visualiser les images
     return nca
