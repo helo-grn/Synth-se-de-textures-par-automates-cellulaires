@@ -29,12 +29,16 @@ Loss: utiliser la référence 11 du papier (Gatys) ou IM01 pour les formules
 ### Objectif minimal de la semaine
 Première approche de l'importation du loss/modèle VGG. Prise en main des papiers.
 
+
+
 # Semaine du 06/05 au 13/05
 
 Proposition d'architecture, ajouts de fichiers de code qui définissent l'architecture du projet (non finis).
 Importation dans loss.py du modèle VGG préexistant dans pytorch, voir la documentation: https://docs.pytorch.org/vision/stable/models/generated/torchvision.models.vgg16.html 
 NB: j'ai importé le modèle dans la fonction déstinée à cela et bloqué les paramètres vu qu'on ne va pas l'entrainer. Il est déja entrainé sur IMAGENET, qui contient pleins de textures différentes donc qui est assez approprié.
 Code pour calculer les matrices de Gram et la VGG loss
+
+
 
 # Réunion 2: 13/05
 
@@ -50,3 +54,11 @@ Code sur les matrices de Gram a identifier, tests potentiellement un peu lents.
 Question: Page 4, tirage aléatoire d'un N, pourquoi cela? Diversité... - à revenir/comprendre (ourquoi on change à chaque fois)
 
 ### Objectif de la semaine: architecture globale et premiers tests, ainsi que prise en main de la source envoyée.
+
+
+
+# Semaine du 13/05 au 20/05
+
+Remplissage du code: la semaine dernière nous avions créé une architecture vide, celle-ci est maintenant complète avec une première version. La loss a aussi étée changée selon les consignes données à la dernière réunion. Une partie de débuggage a aussi étée entamée, mais nous n'avons pas trouvé toutes les sources de problèmes (ou nous n'en sommes pas sûrs). En effet certains problèmes étaient minimes ( ie "loss += w * sum(F.mse_loss(G[i], A[0]) for i in range(G.shape[0]))" n'était pas divisé par 4, ce qui changeait la learning rate en théorie), et nous ne sommes pas certains qu'il s'agisse du ou d'un problème principal du code. 
+
+![Texte alternatif](imageV1.png "V1 imparfaite)
