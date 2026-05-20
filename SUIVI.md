@@ -67,6 +67,8 @@ Si on fixe le nombre de step au minimum ca ne change pas grand chose (esthétiqu
 Fix: les couleurs semblaient dégénérées, solutionné par clamp.
   
 Code des matrices de Gram recopiée et comprise.
+
+
 ![Texte alternatif](images/imageV1.jpeg "V1 imparfaite")
 
 
