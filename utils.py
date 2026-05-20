@@ -18,7 +18,7 @@ def load_texture(path, size=128):
 
 def save_image(tensor_image, path):
     """save l'image generee par nca"""
-    pil_image = F.to_pil_image(tensor_image)
+    pil_image = F.to_pil_image(tensor_image.clamp(0, 1)) #car j'ai du rose chelou des fois
     pil_image.save(path)
 
 
