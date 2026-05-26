@@ -1,6 +1,6 @@
 import torch
 
-IMAGE_PATH = "bubbly_0101.png"
+IMAGE_PATH = "textures/bubbles.png"
 OUT_DIR = "output"
 STEPS = 8000
 BATCH = 4
@@ -13,7 +13,10 @@ LAYERS = {1, 6, 11, 18}
 MEAN   = [0.485, 0.456, 0.406] #moyenne imagenet
 STD    = [0.229, 0.224, 0.225] #std imagenet
 
-PRESET = 6
+PRESET = 1
+
+INFERENCE = False
+NB_IMGS = 10
 
 # mac
 #device = torch.device("mps") if torch.backends.mps.is_available() else torch.device("cpu")

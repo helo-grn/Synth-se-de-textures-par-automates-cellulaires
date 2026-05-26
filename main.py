@@ -7,8 +7,8 @@ from train  import *
 from utils  import *
 from config import *
 
-INFERENCE = False
-NB_IMGS = 10
+
+print(device)
 
 os.makedirs(OUT_DIR, exist_ok=True)
 
