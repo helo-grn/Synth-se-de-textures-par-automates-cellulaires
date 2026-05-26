@@ -96,8 +96,9 @@ Il est préférable de clotûrer cette partie du code déjà faite avant de pass
 
 Tests effectués sur le code actuel: dossiers F1, F2, F3 disponibles dans le dossier image. Les détails des tests sont disponibles dans README.md. 
 Globalement, il y a eu des tests sur les types de filtres, le clamp comme solution des couleurs aberrantes...
+  
 *Conclusions tirées:*
 
-Papier sur les textures dynamiques:
+Papier sur les textures dynamiques:  
 Questions:
-- 
+- Q1..
