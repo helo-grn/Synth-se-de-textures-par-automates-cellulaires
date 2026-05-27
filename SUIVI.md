@@ -1,3 +1,7 @@
+Guide:
+- Tests: dossier images, avec les explications correspondantes dans le README
+- Ici, le compte-rendu semaine par semaine
+
 # Réunion 1: 06/05
 
 ### Prochaine réunion le 13/05
@@ -109,5 +113,25 @@ Globalement, il y a eu des tests sur les types de filtres, le clamp comme soluti
 
 
 Papier sur les textures dynamiques: https://openaccess.thecvf.com/content/CVPR2023/papers/Pajouheshgar_DyNCA_Real-Time_Dynamic_Texture_Synthesis_Using_Neural_Cellular_Automata_CVPR_2023_paper.pdf  
-Questions:
-- Q1..
+
+
+
+# Réunion 4: 27/05
+
+### Prochaine réunion: Vendredi midi en visio 12h
+
+Compte-rendu de la semaine: tests sur les filtres (moyenne nulle parait indispensable même si à priori il y a un moyen de normaliser autre, il n'a pas été atteint).  
+Problème de couleurs sur les tests, potentiellement liés à la convergence (on peut essayer avec plus de pas). Peut être du à des modifications du code sur les matrices de Gramm. Voir pondération des couches, poids plus fort sur les premières qui gèrent cet aspect. Garder correlation forte entre les canaux couleurs (voir dernière image).  
+Images avec des rayures, petit champ récepteur: l'erreur sur cette image n'est pas surprenante, ni grave.  
+Globalement l'algorithme marche.  
+Exercice; calculter le nombre de paramètre (vu qu'on vise à le réduire). A faire et comparer avec Gatis initial: cf papier (5 000 vs 20 000).  
+
+### Objectif de la semaine : 
+Séparer test et train, regarder mesures de textures. Rassembler les résultats sur les filtres utulisés, essayer de comprendre pourquoi. Monitoring du loss.  
+Tester si on peut utiliser la même architecture pour deux exemples. Pourquoi ça marche/ne mmarche pas, est-ce que l'on peut conditionner (non trivial)...  
+Créer branche textures dynamiques? Leur code est lourd avec des parties sûrement inutiles mais il sera dur de le nettoyer. Comprendre comment ça marche.  
+Objectif peut-être plus long terme: créer un petit modèle dynamique simple (à priori il ne marchera pas).  
+Envoyer lien sur ce que l'on à fait la veille, mercredi/jeudi (tests et conclusions...). Moins d'essais à pousser un peu plus.  
+
+
+
