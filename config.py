@@ -15,7 +15,7 @@ STD    = [0.229, 0.224, 0.225] #std imagenet
 
 PRESET = 0
 
-INFERENCE = False
+INFERENCE = True
 NB_IMGS = 10
 
 # mac
