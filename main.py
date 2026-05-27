@@ -7,8 +7,8 @@ from train  import *
 from utils  import *
 from config import *
 
-INFERENCE = False
-NB_IMGS = 10
+
+print(device)
 
 os.makedirs(OUT_DIR, exist_ok=True)
 
@@ -16,10 +16,7 @@ target = load_texture(IMAGE_PATH, size=SIZE).to(device)
 
 target_grams = get_target_grams(target)
 
-
-
-
-for preset_filter in [6]:
+for preset_filter in range(7):
 
     nca = NCA(C=C, hidden=HIDDEN, p=P, preset=preset_filter).to(device)
 

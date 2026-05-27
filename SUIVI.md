@@ -91,3 +91,19 @@ Lire papier sur les textures dynamiques, tester leur code.
   
 Il est préférable de clotûrer cette partie du code déjà faite avant de passer à autre chose (extension), donc il faut bien perfectionner, tester les limites et comprendre les propriétés importantes à garder avant de se lancer. 
 
+
+# Semaine du 20/05 au 27/05
+
+Tests effectués sur le code actuel: dossiers F1, F2, F3 disponibles dans le dossier image. Les détails des tests sont disponibles dans README.md. 
+
+Tests effectués avec PRESET = 1 :
+<img width="2094" height="818" alt="image" src="https://github.com/user-attachments/assets/9a9a0bd0-9856-4f1e-9197-e68c1900e094" />
+
+
+Globalement, il y a eu des tests sur les types de filtres, le clamp comme solution des couleurs aberrantes...
+  
+*Conclusions tirées:*
+
+Papier sur les textures dynamiques: https://openaccess.thecvf.com/content/CVPR2023/papers/Pajouheshgar_DyNCA_Real-Time_Dynamic_Texture_Synthesis_Using_Neural_Cellular_Automata_CVPR_2023_paper.pdf  
+Questions:
+- Q1..
