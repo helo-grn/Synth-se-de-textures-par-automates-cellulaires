@@ -65,4 +65,4 @@ else:
 
     for i in range(NB_IMGS):
         os.makedirs(f"{OUT_DIR}/preset_{PRESET}", exist_ok=True)
-        save_image(state[i,:3,:,:], f"{OUT_DIR}/preset_{PRESET}/final_{i}.png")
+        save_image(state[i,:3,:,:].clamp(0, 1), f"{OUT_DIR}/preset_{PRESET}/final_{i}.png")

@@ -1,8 +1,8 @@
 import torch
 
-IMAGE_PATH = "textures/cheveux.png"
+IMAGE_PATH = "textures/dotted.png"
 OUT_DIR = "output"
-STEPS = 10000
+STEPS = 2000
 BATCH = 4
 SIZE = 128
 C = 12

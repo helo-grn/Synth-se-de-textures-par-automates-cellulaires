@@ -63,5 +63,5 @@ def train(nca, target_grams, steps, batch, H, W, device):
         loss_history.append(loss.item())
         if step % 200 == 0:
             print(f"step {step} ; loss {loss.item()}")
-            save_image(states[0,:3,:,:], f"{OUT_DIR}/step_{step}.png") #enregistrer que rgb pour visualiser les images
+            save_image(states[0,:3,:,:].clamp(0, 1), f"{OUT_DIR}/step_{step}.png") #enregistrer que rgb pour visualiser les images
     return nca, loss_history

@@ -27,7 +27,7 @@ def gram_matrix(tnsr):
     b, c, h, w = tnsr.size()
     Fm = tnsr.view(b, c, h * w)
     G = torch.bmm(Fm, Fm.transpose(1, 2))
-    #G.div_(h * w)
+    G /= (c*h*w)
     return G
 
 
