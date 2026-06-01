@@ -1,5 +1,6 @@
 import os
 import torch
+import matplotlib.pyplot as plt
 
 from nca    import NCA
 from loss   import *
@@ -45,8 +46,15 @@ for preset_filter in range(7):
 
 if not INFERENCE:
     nca = NCA(C=C, hidden=HIDDEN, p=P, preset=PRESET).to(device)
-    nca = train(nca, target_grams,steps=STEPS, batch=BATCH, H=SIZE, W=SIZE, device=device)
+    nca, loss_history = train(nca, target_grams,steps=STEPS, batch=BATCH, H=SIZE, W=SIZE, device=device)
     torch.save(nca.state_dict(), f"{OUT_DIR}/nca.pth")
+    plt.plot(loss_history)
+    plt.yscale("log")
+    plt.xlabel("Steps")
+    plt.ylabel("Loss")
+    plt.title(f"Training Loss for {IMAGE_PATH.split('/')[-1]} ")
+    plt.savefig(f"{OUT_DIR}/loss_history.png")
+    plt.show()
 else:
     for preset_filter in range(7):
         nca = NCA(C=C, hidden=HIDDEN, p=P, preset=preset_filter).to(device)

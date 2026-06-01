@@ -43,7 +43,7 @@ def train(nca, target_grams, steps, batch, H, W, device):
 
     pool = make_pool().to(device)
     optimizer = optim.Adam(nca.parameters(), lr=2e-3)
-    
+    loss_history = []
 
     for step in tqdm(range(steps)):
 
@@ -60,7 +60,8 @@ def train(nca, target_grams, steps, batch, H, W, device):
         optimizer.step()
 
         pool[idx] = states.detach() #maj du pool avec les nouveaux etats
+        loss_history.append(loss.item())
         if step % 200 == 0:
             print(f"step {step} ; loss {loss.item()}")
             save_image(states[0,:3,:,:], f"{OUT_DIR}/step_{step}.png") #enregistrer que rgb pour visualiser les images
-    return nca
+    return nca, loss_history
