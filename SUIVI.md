@@ -138,10 +138,10 @@ Envoyer lien sur ce que l'on à fait la veille, mercredi/jeudi (tests et conclus
 
 Nous avons créé une grille de test (cf google sheet), mais n'étions pas satisfaits par les résultats obtenus. Les deux défauts principaux étaient les fausses couleurs, c'est-à-dire l'assombrissement de l'image, et la perte de structure, c'est-à-dire, pour l'image bubbles par exemple, l'apparition de bulles difformes et mal espacées. Pour solutionner ce problème, nous avons testé les couches unes par unes, afin de comprendre leur impact individuel (NB: nous avions déjà augmenté le poids des premières couches comme recommandé). Nous avons découvert que la dernière couche faisait la grande majorité du travail.
 
-Nous avons eu beaucoup de mal à obtenir une version satisfaisante du code, mais au final nous sommes plutôt satisfaits de la version actuelle.
-![Texte alternatif](images/sheet_code_debug.jpeg "Synthèse actuelle")
+Nous avons eu beaucoup de mal à obtenir une version satisfaisante du code, mais au final nous sommes plutôt satisfaits de la version actuelle.  
+![Texte alternatif](images/sheet_code_debug.png "Synthèse actuelle")
 
-Nous avons bien ajouté le monitoring du loss, et testé différents filtres (voir la description des presets dans le README).
-![Texte alternatif](images/presets.jpeg "Tests des presets")
+Nous avons bien ajouté le monitoring du loss, et testé différents filtres (voir la description des presets dans le README).  
+![Texte alternatif](images/presets.png "Tests des presets")
 
 
