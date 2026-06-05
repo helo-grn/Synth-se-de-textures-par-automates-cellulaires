@@ -36,29 +36,76 @@ def get_vgg():
     return vgg
 
 
-VGG = get_vgg().to(device) 
+VGG = get_vgg().to(device)
 
 
-def get_target_grams(img): #sera appele dans main pr calculer les target_grams
+def get_target_grams(img):
     grams = []
     x = normalize(img)
     for i, layer in enumerate(VGG):
         x = layer(x)
         if i in LAYERS:
-            grams.append(gram_matrix(x).detach())  # FIX 1 : detach pour pas garder le graphe VGG
+            grams.append(gram_matrix(x).detach())
     return grams
 
 
 def texture_loss(y_pred, target_grams, weights=[1/(64**2), 1/(128**2), 1/(256**2), 1/(512**2)]):
     pred_grams = []
-    x = normalize(y_pred) #clamp pour forcer les valeurs entre 0 et 1
+    x = normalize(y_pred)
     for i, layer in enumerate(VGG):
         x = layer(x)
         if i in LAYERS:
-            pred_grams.append(gram_matrix(x))  # pas de .detach() ici !
+            pred_grams.append(gram_matrix(x))
 
     loss = 0
     for G, A, w in zip(pred_grams, target_grams, weights):
         loss += w * ((G - A.expand_as(G)) ** 2).mean()
+
+    return loss
+
+#####SOT#####
+def calc_styles_vgg(imgs):
+    b, c, h, w = imgs.shape
+    x = normalize(imgs.clamp(0, 1))
+
+    features = []
+    for i, layer in enumerate(VGG):
+        x = layer(x)
+        if i in LAYERS:
+            b2, c2, h2, w2 = x.shape
+            features.append(x.reshape(b2, c2, h2*w2))
+
+    return features
+
+
+def project_sort(x, proj):
+    # x:(B, C, N), N=H*W, proj:(C, proj_n)
+    #(B,C,N) -> (B,N,C) @ (C,P) -> (B,N,P) -> (B,P,N)
+    return (x.permute(0, 2, 1) @ proj).permute(0, 2, 1).sort(dim=-1)[0]
+
+
+def ot_loss(source, target, proj_n=512):
+    ch = source.shape[1]   
+    n  = source.shape[2]   
+
+    projs = torch.randn(ch, proj_n, device=source.device)
+    projs = projs / (torch.norm(projs, dim=0, keepdim=True) + 1e-8)
+
+    source_proj = project_sort(source, projs)   
+    target_proj = project_sort(target, projs)   
+
+    if target_proj.shape[-1] != n:
+        target_proj = F.interpolate(target_proj, size=n, mode="nearest")
+
+    return (source_proj - target_proj).square().mean()
+
+
+def texture_loss_sot(y_pred, target_img, weights=[1, 1, 1, 1]):
+    pred_styles   = calc_styles_vgg(y_pred)
+    target_styles = calc_styles_vgg(target_img)
+
+    loss = 0
+    for pred, target, w in zip(pred_styles, target_styles, weights):
+        loss = loss + w * ot_loss(pred, target.detach())
 
     return loss

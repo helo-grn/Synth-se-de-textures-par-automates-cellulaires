@@ -3,7 +3,7 @@ import torch
 import torch.optim as optim
 import torch.nn.functional as F
 from config import *
-from loss import texture_loss
+from loss import texture_loss, texture_loss_sot
 from utils import save_image
 from tqdm import tqdm
 
@@ -33,7 +33,7 @@ if not MULTI_TEX:
         return batch, idx
     
     
-    def train(nca, target_grams, steps, batch, H, W, device):
+    def train(nca, target, target_grams, steps, batch, H, W, device):
         """
         boucle d'entrainement 
 
@@ -57,7 +57,14 @@ if not MULTI_TEX:
             n=random.randint(32, 64) 
             states = nca(states, steps=n)
 
-            loss = texture_loss(states[:,:3,:,:], target_grams)
+            rgb = states[:, :3, :, :].clamp(0, 1)
+
+            # switch loss selon config
+            if LOSS == "sot":
+                loss = texture_loss_sot(rgb, target)
+            elif LOSS == "gram":
+                loss = texture_loss(rgb, target_grams)
+
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
@@ -110,7 +117,7 @@ if MULTI_TEX:
         return batch, idx
 
 
-    def train(nca, list_target_grams, steps, batch, H, W, device):
+    def train(nca, list_targets, list_target_grams, steps, batch, H, W, device):
         """
         """
 
@@ -130,10 +137,16 @@ if MULTI_TEX:
             tex_idx = random.randint(0, N_TEX-1)
             states, idx = sample_pool(pool, batch, tex_idx)
 
-            n=random.randint(32, 64) 
+            n=random.randint(32, 128) 
             states = nca(states, steps=n)
 
-            loss = texture_loss(states[:,:3,:,:], list_target_grams[tex_idx])
+            rgb = states[:, :3, :, :].clamp(0, 1)
+
+            if LOSS == "sot":
+                loss = texture_loss_sot(rgb, list_targets[tex_idx])
+            elif LOSS == "gram":
+                loss = texture_loss(rgb, list_target_grams[tex_idx])
+
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()

@@ -49,7 +49,7 @@ if not MULTI_TEX:
 
     if not INFERENCE:
         nca = NCA(C=C, hidden=HIDDEN, p=P, preset=PRESET).to(device)
-        nca, loss_history = train(nca, target_grams, steps=STEPS, batch=BATCH, H=SIZE, W=SIZE, device=device)
+        nca, loss_history = train(nca, target, target_grams, steps=STEPS, batch=BATCH, H=SIZE, W=SIZE, device=device)
         torch.save(nca.state_dict(), f"{OUT_DIR}/nca.pth")
         plt.plot(loss_history)
         plt.yscale("log")
@@ -73,14 +73,16 @@ if not MULTI_TEX:
 
 if MULTI_TEX:
 
+    list_targets = []
     list_target_grams = []
     for path in IMAGES_PATHS:
-        target = load_texture(path, size=SIZE).to(device)
-        list_target_grams.append(get_target_grams(target))   
+        t = load_texture(path, size=SIZE).to(device)
+        list_targets.append(t)
+        list_target_grams.append(get_target_grams(t))
 
     if not INFERENCE:
         nca = NCA(C=C, hidden=HIDDEN, p=P, preset=PRESET).to(device)
-        nca, loss_history = train(nca, list_target_grams, steps=STEPS, batch=BATCH, H=SIZE, W=SIZE, device=device)
+        nca, loss_history = train(nca, list_targets, list_target_grams, steps=STEPS, batch=BATCH, H=SIZE, W=SIZE, device=device)
         torch.save(nca.state_dict(), f"{OUT_DIR}/nca_mult.pth")
         plt.plot(loss_history)
         plt.yscale("log")
