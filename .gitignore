@@ -17,3 +17,5 @@ Thumbs.db
 
 # Output
 output/
+output2/  
+nca.pth
