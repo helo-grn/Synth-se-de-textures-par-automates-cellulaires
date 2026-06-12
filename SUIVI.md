@@ -193,3 +193,13 @@ Le rapport est commencé (à discuter en réunion), avec une première organisat
 
 Dotted avec SOT, 15 000 steps:
 ![Dotted 15000steps](images/sot_preset_0/final_9.png "Dotted SOT")
+
+
+# Réunion 6: 12/06
+
+Récapitulatif de ce qui a été fait et description du rapport dans son état actuel.
+Ajouter une partie Limitations de la méthode. La longueur peut légerement dépasser 15 pages, sinon nous pouvons mettre les images en plus dans l'appendice.
+
+Le code est a commenter.
+
+La soutenance aura 10 minutes de présentation avec support et 10 minutes de questions. Elle aura lieu le 22 juin dans la matinée.
