@@ -4,7 +4,7 @@ MULTI_TEX = False
 
 
 if not MULTI_TEX:
-    IMAGE_PATH = "paris.jpg"
+    IMAGE_PATH = "louvre.jpg"
     C = 12
 
 
@@ -56,7 +56,7 @@ PRESET = 0
 
 LOSS = "gram"  # sot ou gram
 
-INFERENCE = False
+INFERENCE = True
 # !!!! si multi-textures :
 # si INFERENCE = True, ne pas oublier de préciser TEX_IDX la texture qu'on veut générer!!!
 
