@@ -14,23 +14,23 @@ if not MULTI_TEX:
 
     def make_pool(size=1024, C=12, H=SIZE, W=SIZE):
         """
-        Cree un pool de size etats init avec du bruit U[0,1] ->renvoie tenseur (size, C, H, W)
-        plutôt que de recommencer de zéro à chaque step, on continue depuis des états déjà partiellement développés
+        Crée un pool de `size` états initiaux avec du bruit U[0,1] -> renvoie tenseur (size, C, H, W)
+        Plutôt que de recommencer de zéro à chaque step, on continue depuis des états déjà partiellement développés
         """
         return torch.rand(size, C, H, W)
 
 
     def sample_pool(pool, batch_size):
         """
-        Pioche batch_size états aléatoires dans le pool.
-        Force la réinitialisation du premier état tiré (au pif) avec du bruit aléatoire, comme décrit dans le papier :
+        Pioche `batch_size` états aléatoires dans le pool.
+        Force la réinitialisation du premier état tiré (aléatoirement) avec du bruit aléatoire, comme décrit dans le papier :
         "we replace one of them with an empty state, so the model doesn't forget how to build the pattern from scratch"
         
         on return batch (batch_size, C, H, W), idx (liste d'indices) 
         """
         
         idx      = random.sample(range(len(pool)), batch_size) # Choix aléatoire d'indices
-        batch    = pool[idx].clone() # on clone pour ne pas modifier le pool directement
+        batch    = pool[idx].clone() # On clone pour ne pas modifier le pool directement
         batch[0] = torch.rand(batch[0].shape)   # On prend le premier car l'aléatoire est induit par radom.sample au-dessus.
         return batch, idx
     
@@ -62,11 +62,11 @@ if not MULTI_TEX:
 
             rgb = states[:, :3, :, :] # On ne prend que les 3 premiers canaux, qui correspondent à l'image RGB générée par le modèle.
 
-            # switch loss selon config
+            # Switch loss selon config
             if LOSS == "sot":
                 loss = texture_loss_sot(rgb, target) # cf loss.py pour la fonction texture_loss_sot
             elif LOSS == "gram":
-                loss = texture_loss(rgb, target_grams) #idem
+                loss = texture_loss(rgb, target_grams) # idem
 
             optimizer.zero_grad()
             loss.backward()
@@ -77,7 +77,7 @@ if not MULTI_TEX:
 
             if step % 200 == 0: # Visualisation pour vérifier que tout va bien!
                 print(f"step {step} ; loss {loss.item()}")
-                save_image(states[0,:3,:,:].clamp(0, 1), f"{OUT_DIR}/step_{step}.png") #enregistrer que rgb pour visualiser les images
+                save_image(states[0,:3,:,:].clamp(0, 1), f"{OUT_DIR}/step_{step}.png") # N'enregistre que les canaux RGB pour visualiser les images
         
         return nca, loss_history
 
@@ -88,14 +88,14 @@ if MULTI_TEX:
     def make_pool(size=1024, C=C, H=SIZE, W=SIZE):
 
         """
-        Cree un pool de size etats init avec du bruit U[0,1] ->renvoie tenseur (size, C, H, W)
+        Crée un pool de `size` états initiaux avec du bruit U[0,1] -> renvoie tenseur (size, C, H, W)
         Chaque texture a sa propre pool, donc on "marque" les images de chaque pool avec le code génétique correspondant à la texture pour ne pas tout mélanger.
         """
 
         pool = torch.rand(size, C, H, W)
         chunk_size = size // N_TEX
 
-        # initialisation pour chaque texture des images de sa pool personnelle
+        # Initialisation pour chaque texture des images de sa pool personnelle
         # pour les "marquer" comme étant images de cette texture
         for tex_idx in range(N_TEX):
             bin_code = idx_to_bin(tex_idx, N_G)

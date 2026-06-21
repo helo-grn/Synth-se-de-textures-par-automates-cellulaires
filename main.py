@@ -92,7 +92,7 @@ if MULTI_TEX: # Presque la même chose
         with torch.no_grad():
             state= torch.rand(NB_IMGS, C, SIZE, SIZE, device=device)
 
-            # on initialise les genomic channels pr dire "on veut synthétiser CETTE texture"
+            # on initialise les genomic channels pour dire "on veut synthétiser CETTE texture"
             for bit_idx, cha_idx in enumerate(GENOMIC_CHANNELS):
                 state[:, cha_idx, :, :] = TARGET_TEX[bit_idx]
         

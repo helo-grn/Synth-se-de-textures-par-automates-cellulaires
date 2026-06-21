@@ -9,7 +9,9 @@ from utils import *
 # fonctions similaires à http://colab.research.google.com/github/storimaging/Notebooks/blob/main/ImageGeneration/Style_Transfer.ipynb#scrollTo=CHKjVMHpYgkd
 
 def normalize(x): 
-    """normalisation ImageNet"""
+    """
+    Normalise une image `x` avec la normalisation ImageNet
+    """
     mean = torch.tensor(MEAN, device=x.device).view(1, 3, 1, 1)
     std  = torch.tensor(STD,  device=x.device).view(1, 3, 1, 1)
     return (x - mean) / std
@@ -29,17 +31,19 @@ def gram_matrix(tnsr):
     return G
 
 
-#charge VGG16 
 def get_vgg():
+    """
+    Charge le modèle VGG16 préentrainé sur ImageNet et le met en mode évaluation.
+    """
     vgg = tv.vgg16(weights=tv.VGG16_Weights.IMAGENET1K_V1).features.eval()
     for p in vgg.parameters():
-        p.requires_grad = False #bloque psk on utilise préentrainé
+        p.requires_grad = False # On freeze les paramètres car on utilise un modèle préentrainé
 
     return vgg
 
 
 VGG = get_vgg().to(device)
-print(VGG)
+
 
 def get_target_grams(img):
     """matrices de Gram de l'image cible (texture de référence)"""
@@ -91,9 +95,10 @@ def project_sort(x, proj):
     #(B,C,N) -> (B,N,C) @ (C,P) -> (B,N,P) -> (B,P,N)
     return (x.permute(0, 2, 1) @ proj).permute(0, 2, 1).sort(dim=-1)[0]
 
+
 def ot_loss(source, target, proj_n=32):
     """
-    Perte  entre deux distributions de features via la méthode Sliced Wasserstein
+    Perte entre deux distributions de features via la méthode Sliced Wasserstein
     Principe : on projette source et target sur proj_n directions aléatoires, on trie chaque projection, 
     puis on mesure l'écart**2 (la distance de Wasserstein 1D entre deux distributions triées est exactement le L2 entre leurs versions triées)."""
     ch = source.shape[1]
@@ -106,6 +111,7 @@ def ot_loss(source, target, proj_n=32):
     target_proj = target_proj.expand_as(source_proj)    # (B, P, N)
 
     return (source_proj - target_proj).square().sum()
+
 
 def texture_loss_sot(y_pred, target_img):
     pred_styles   = calc_styles_vgg(y_pred)
