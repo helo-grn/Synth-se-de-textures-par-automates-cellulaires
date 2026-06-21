@@ -44,15 +44,17 @@ def make_kernels(C, nbFilters=4, preset=0):
         kernels = torch.stack([s, s1, s2, s3])
 
     elif preset == 5:
-        s = torch.tensor([[0, 0, 0], [0, 1, 0], [0, 0, 0]], dtype=torch.float32)
-        s1 = torch.randint(0, 100, (3, 3), dtype=torch.float32)
+        rand_filte_size = FILTER_SIZE
+        s = torch.zeros((rand_filte_size, rand_filte_size), dtype=torch.float32)
+        s[rand_filte_size//2, rand_filte_size//2] = 1.0
+        s1 = torch.randint(0, 100, (rand_filte_size, rand_filte_size), dtype=torch.float32)
         s1.div_(torch.sum(s1)) 
         s1 = s1 - torch.mean(s1)
         print(s1)
-        s2 = torch.randint(0, 100, (3, 3), dtype=torch.float32)
+        s2 = torch.randint(0, 100, (rand_filte_size, rand_filte_size), dtype=torch.float32)
         s2.div_(torch.sum(s2))
         s2 = s2 - torch.mean(s2)
-        s3 = torch.randint(0, 100, (3, 3), dtype=torch.float32)
+        s3 = torch.randint(0, 100, (rand_filte_size, rand_filte_size), dtype=torch.float32)
         s3.div_(torch.sum(s3))
         s3 = s3 - torch.mean(s3)
         kernels = torch.stack([s, s1, s2, s3])    
@@ -122,12 +124,12 @@ class NCA(nn.Module):
     def perceive(self, state):
         """Applique les 4 filtres sur la grille"""
         # torus topology (a voir comment faire??) + conv depthwise
-        state = F.pad(state, (1,1,1,1), mode='circular') #torus topolgy c juste circular si jai bien compris
+        state = F.pad(state, (FILTER_SIZE//2, FILTER_SIZE//2, FILTER_SIZE//2, FILTER_SIZE//2), mode='circular') #torus topolgy c juste circular si jai bien compris
         # Conv depthwise : on applique les memes kernels sur chaque canal de la grille
         # print("Before perception", state.shape)
         # print(self.C)
         # print(state)
-        perception_vector = F.conv2d(state, self.kernels.view(-1, 1, 3, 3), groups=self.C)
+        perception_vector = F.conv2d(state, self.kernels.view(-1, 1, FILTER_SIZE, FILTER_SIZE), groups=self.C)
         # print("Perception vector:", perception_vector.shape)
         # print(perception_vector[0, :5, :, :])
         return perception_vector # (B, 4*C, H, W)

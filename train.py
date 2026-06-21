@@ -11,7 +11,7 @@ from tqdm import tqdm
 
 if not MULTI_TEX:
 
-    def make_pool(size=1024, C=12, H=128, W=128):
+    def make_pool(size=1024, C=12, H=SIZE, W=SIZE):
         """
         Cree un pool de size etats init avec du bruit U[0,1] ->renvoie tenseur (size, C, H, W)
         """
@@ -86,7 +86,7 @@ if not MULTI_TEX:
 
 if MULTI_TEX:
 
-    def make_pool(size=1024, C=C, H=128, W=128):
+    def make_pool(size=1024, C=C, H=SIZE, W=SIZE):
 
         pool = torch.rand(size, C, H, W)
         chunk_size = size // N_TEX
@@ -137,7 +137,7 @@ if MULTI_TEX:
             tex_idx = random.randint(0, N_TEX-1)
             states, idx = sample_pool(pool, batch, tex_idx)
 
-            n=random.randint(32, 128) 
+            n=random.randint(32, 64) 
             states = nca(states, steps=n)
 
             rgb = states[:, :3, :, :]

@@ -1,6 +1,6 @@
 import torch
 
-MULTI_TEX = False
+MULTI_TEX = True
 
 
 if not MULTI_TEX:
@@ -12,10 +12,10 @@ if MULTI_TEX:
 
     N_G = 2 # number of genomic channels !!! 2^N_G = N_TEX textures générées
     IMAGES_PATHS = [ # Le vecteur doit être de taille 2^N_G ! --- indexes 0, 1, …, N_TEX
-        "ecailles.jpg",
-        "brique.jpg",
-        "cerise.jpg",
-        "moquette.jpg"
+        "textures/bubbles.png",
+        "textures/brique.jpg",
+        "textures/dotted.jpg",
+        "textures/leopard.jpg"
     ]
     TEX_IDX = 2 # index de la texture que l'on souhaite générer pour le TEST
     C = 18 # C = 3 + N_G + N_H
@@ -48,15 +48,16 @@ SIZE = 128
 HIDDEN = 96
 P = 0.5
 
-LAYERS = [1, 6, 11, 18] 
+LAYERS = [1, 6, 11, 18] # 1, 6, 11, 18
 MEAN   = [0.485, 0.456, 0.406] #moyenne imagenet
 STD    = [0.229, 0.224, 0.225] #std imagenet
 
-PRESET = 1
+PRESET = 0
+FILTER_SIZE = 3
 
 LOSS = "gram"  # sot ou gram
 
-INFERENCE = False
+INFERENCE = True
 # !!!! si multi-textures :
 # si INFERENCE = True, ne pas oublier de préciser TEX_IDX la texture qu'on veut générer!!!
 

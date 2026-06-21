@@ -37,7 +37,7 @@ def get_vgg():
 
 
 VGG = get_vgg().to(device)
-
+print(VGG)
 
 def get_target_grams(img):
     grams = []
