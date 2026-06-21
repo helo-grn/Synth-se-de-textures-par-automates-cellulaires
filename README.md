@@ -47,20 +47,20 @@ python main.py
 
 ## Paramètres (`config.py`)
 
-| Paramètre | Rôle | Défaut |
+| Paramètre | Rôle | options |
 |-----------|------|:------:|
-| `MULTI_TEX` | Mode multi-texture | `False` |
-| `IMAGE_PATH` | Image source (dans `textures/`) | `None` |
-| `C` | Canaux d'état par cellule | `12` |
-| `HIDDEN` | Taille couche cachée MLP | `96` |
-| `P` | Probabilité de mise à jour | `0.5` |
-| `STEPS` | Steps d'entraînement | `10000` |
-| `BATCH` | Taille du batch | `4` |
-| `SIZE` | Résolution  | `128` |
-| `PRESET` | Filtres de perception (0–7) | `0` |
-| `LOSS` | `"gram"` ou `"sot"` | `"gram"` |
-| `INFERENCE` | Inférence vs entraînement | `True` |
-| `NB_IMGS` | Images générées en inférence | `10` |
+| `MULTI_TEX` | Mode multi-texture | `False` ou `True` |
+| `IMAGE_PATH` | Image source (dans `textures/`) | "path de l'image" |
+| `C` | Canaux d'état par cellule | défaut : `12` |
+| `HIDDEN` | Taille couche cachée MLP | défaut :`96` |
+| `P` | Probabilité de mise à jour | défaut : `0.5` |
+| `STEPS` | Steps d'entraînement | nb, défaut :`10000` |
+| `BATCH` | Taille du batch | défaut :`4` |
+| `SIZE` | Résolution  | défaut :`128` |
+| `PRESET` | Filtres de perception (0–7) | `0`, `1`, ..., `7` |
+| `LOSS` | Fonction coût choisie | `"gram"` ou `"sot"` |
+| `INFERENCE` | Inférence vs entraînement | `True` ou `False` |
+| `NB_IMGS` | nb d'images générées en inférence | nb, défaut : 10 |
 
 ### Mode multi-texture (`MULTI_TEX = True`)
 
