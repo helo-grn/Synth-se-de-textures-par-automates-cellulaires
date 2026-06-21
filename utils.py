@@ -4,13 +4,13 @@ import torchvision.transforms.functional as F
 from PIL import Image
 from config import *
 
-# Fichier utiliser pour coder les fonctions "utilitaires", chargement, sauvegarde...
+# Fichier utilisé pour coder les fonctions "utilitaires", chargement, sauvegarde...
 
 
 def load_texture(path, size=128): 
     """
-    charge une image depuis path, la redimensionne en carré de côté size 
-    return tensor (1, 3, H, W) en  [0,1] 
+    Charge une image depuis path, la redimensionne en carré de côté size  
+    Retourne un tenseur (1, 3, H, W) sur [0,1] 
     """
     img = Image.open(path).convert('RGB') 
     img = img.resize((size, size))
@@ -20,13 +20,17 @@ def load_texture(path, size=128):
 
 
 def save_image(tensor_image, path):
-    """save l'image generee par nca"""
+    """
+    Sauvegarde l'image générée par le NCA
+    """
     pil_image = F.to_pil_image(tensor_image.clamp(0, 1)) # clamp par précaution, pour éviter les valeurs négatives ou >1
     pil_image.save(path)
 
 
 def apply_damage(state, rayon=0.2):
-    """efface un cercle de rayon rayon*min(H,W) au centre de l'image"""
+    """
+    Efface un cercle de rayon rayon*min(H,W) au centre de l'image
+    """
     B, C, H, W = state.shape
     state = state.clone()
     cy, cx = H//2, W//2

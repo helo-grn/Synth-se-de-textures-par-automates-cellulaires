@@ -14,19 +14,19 @@ if not MULTI_TEX:
 
     def make_pool(size=1024, C=12, H=SIZE, W=SIZE):
         """
-        Crée un pool de `size` états initiaux avec du bruit U[0,1] -> renvoie tenseur (size, C, H, W)
-        Plutôt que de recommencer de zéro à chaque step, on continue depuis des états déjà partiellement développés
+        Crée un pool de size états initiaux avec du bruit U[0,1]  
+        Renvoie un tenseur (size, C, H, W)
         """
         return torch.rand(size, C, H, W)
 
 
     def sample_pool(pool, batch_size):
         """
-        Pioche `batch_size` états aléatoires dans le pool.
+        Pioche batch_size états aléatoires dans le pool.  
         Force la réinitialisation du premier état tiré (aléatoirement) avec du bruit aléatoire, comme décrit dans le papier :
         "we replace one of them with an empty state, so the model doesn't forget how to build the pattern from scratch"
         
-        on return batch (batch_size, C, H, W), idx (liste d'indices) 
+        Renvoie batch (batch_size, C, H, W), idx (liste d'indices) 
         """
         
         idx      = random.sample(range(len(pool)), batch_size) # Choix aléatoire d'indices
@@ -37,20 +37,19 @@ if not MULTI_TEX:
     
     def train(nca, target, target_grams, steps, batch, H, W, device):
         """
-        boucle d'entrainement 
+        Boucle d'entraînement  
 
-        lr : 2e-3 jusqu'au step 2000, puis 2e-4 (cf article)
-
+        lr : 2e-3 jusqu'au step 2000, puis 2e-4 (cf. article)
         """
 
-        # regarder texture_loss dans loss.py et mettre les bons parametres
+        # regarder texture_loss dans loss.py et mettre les bons paramètres
 
-        # Initialisation du pool, qui est un ensemble d'états (images) que le modèle va utiliser pour s'entrainer.
+        # Initialisation du pool, qui est un ensemble d'états (images) que le modèle va utiliser pour s'entraîner.
         pool = make_pool().to(device)
         optimizer = optim.Adam(nca.parameters(), lr=2e-3)
         loss_history = []
 
-        for step in tqdm(range(steps)): # Boucle d'entrainement. Assez standard, sauf quelques détails précisés.
+        for step in tqdm(range(steps)): # Boucle d'entraînement. Assez standard, sauf quelques détails précisés.
 
             if step == 2000: # Changement décrit par l'article.
                 for param_group in optimizer.param_groups:
@@ -88,7 +87,8 @@ if MULTI_TEX:
     def make_pool(size=1024, C=C, H=SIZE, W=SIZE):
 
         """
-        Crée un pool de `size` états initiaux avec du bruit U[0,1] -> renvoie tenseur (size, C, H, W)
+        Crée un pool de size états initiaux avec du bruit U[0,1]  
+        Renvoie un tenseur (size, C, H, W)  
         Chaque texture a sa propre pool, donc on "marque" les images de chaque pool avec le code génétique correspondant à la texture pour ne pas tout mélanger.
         """
 
@@ -107,7 +107,6 @@ if MULTI_TEX:
     def sample_pool(pool, batch_size, tex_idx):
         """
         Tire un échantillon de la pool de la texture spécifiée.
-
         """
 
         chunk_size = len(pool) // N_TEX
@@ -126,10 +125,10 @@ if MULTI_TEX:
 
     def train(nca, list_targets, list_target_grams, steps, batch, H, W, device):
         """
-        boucle d'entrainement pour le modèle multi-texture, essentiellement identique à l'entrainement standard. On ajoute juste un tirage au sort d'une texture à chaque étape pour piocher dans sa pool correspondante.
+        Boucle d'entraînement pour le modèle multi-texture, essentiellement identique à l'entraînement standard. On ajoute juste un tirage au sort d'une texture à chaque étape pour piocher dans sa pool correspondante.
         """
 
-        # regarder texture_loss dans loss.py et mettre les bons parametres
+        # regarder texture_loss dans loss.py et mettre les bons paramètres
 
         pool = make_pool().to(device)
         optimizer = optim.Adam(nca.parameters(), lr=2e-3)

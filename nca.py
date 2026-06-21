@@ -4,9 +4,10 @@ import torch.nn.functional as F
 from config import *
 
 def make_kernels(C, preset=0):
-    """Retourne un tensor avec les 4 noyaux (s, sx, sy, lap) et les concatener
-    Chaque preset définit une famille de filtres différente
-    0 ceux du papier de reference"""
+    """
+    Retourne un tenseur avec les 4 noyaux (s, sx, sy, lap) et les concatène.  
+    Chaque preset définit une famille de filtres différente (preset=0 pour l'article de référence).
+    """
     if preset == 0:
         s = torch.tensor([[0, 0, 0], [0, 1, 0], [0, 0, 0]], dtype=torch.float32)
         sx  = torch.tensor([[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]], dtype=torch.float32) /8
@@ -101,11 +102,11 @@ class NCA(nn.Module):
         else:
             self.nb_filters = 1
 
-        #enregistrer les kernels (self.kernels) comme buffer (avec la fct register_buffer pour pas les apprendre car ils sont fixes (sobel et laplacien) ; une fonction pytorch)
+        # enregistrer les kernels (self.kernels) comme buffer (avec la fct register_buffer pour pas les apprendre car ils sont fixes (sobel et laplacien) ; une fonction pytorch)
         kernels = make_kernels(C, preset)
         self.register_buffer("kernels", kernels)
     
-        #le mlp
+        # le mlp
         self.mlp = nn.Sequential(
             nn.Conv2d(self.nb_filters*C, hidden, kernel_size=1),
             nn.ReLU(),
@@ -116,9 +117,11 @@ class NCA(nn.Module):
 
 
     def perceive(self, state):
-        """Applique les nb_filters filtres sur chaque canal de la grille.
-        Topologie torique : le padding circulaire connecte les bords opposés.
-        Conv depthwise (groups=C) : chaque canal est filtré indépendamment."""
+        """
+        Applique les nb_filters filtres sur chaque canal de la grille.  
+        Topologie torique : le padding circulaire connecte les bords opposés.  
+        Conv depthwise (groups=C) : chaque canal est filtré indépendamment.
+        """
 
         state = F.pad(state, (FILTER_SIZE//2, FILTER_SIZE//2, FILTER_SIZE//2, FILTER_SIZE//2), mode='circular') #torus topolgy 
         # Conv depthwise : on applique les memes kernels sur chaque canal de la grille
@@ -128,8 +131,8 @@ class NCA(nn.Module):
 
     def forward(self, state, steps):
         """
-        renvoie taille (B, C, H, W)
-        a chaque step : perceive ->self.mlp -> masque Bernoulli(self.p) de shape (B, 1, H, W) -> maj de s
+        Renvoie un tenseur de taille (B, C, H, W)  
+        A chaque step : perceive -> self.mlp -> masque Bernoulli(self.p) de shape (B, 1, H, W) -> maj de s
         """
         for _ in range(steps):
             perception_vector = self.perceive(state) # (B, 4*C, H, W)

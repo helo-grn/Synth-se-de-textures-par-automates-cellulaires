@@ -2,6 +2,7 @@ import torch
 
 # Fichier de gestion, qui permet de régler l'ensemble des hyperparamètres.
 
+
 # Mettre "True" pour entrainer un modèle multi-texture, "False" pour le modèle standard.
 MULTI_TEX = False
 
@@ -36,7 +37,7 @@ if MULTI_TEX:
 
     def idx_to_bin(tex_idx, n_g):
         """
-        convertit l'indice d'une texture en son code binaire ("code génétique")
+        Convertit l'indice d'une texture en son code binaire ("code génétique")
         """
         return [float((tex_idx >> i) & 1) for i in range(n_g)]
 
@@ -54,11 +55,11 @@ P = 0.5 # Probabilité de dropout
 
 
 LAYERS = [1, 6, 11, 18] # Couches du réseau importé VGG16 qui sont utilisées dans la loss
-MEAN   = [0.485, 0.456, 0.406] #moyenne imagenet
-STD    = [0.229, 0.224, 0.225] #std imagenet
+MEAN   = [0.485, 0.456, 0.406] # Moyenne imagenet
+STD    = [0.229, 0.224, 0.225] # Écart-type imagenet
 
 PRESET = 0 # Réglage des filtres. 0 correspond aux réglages standard de l'article. Il est possible de le changer pour tester les hypothèses de l'article (cf. README.md)
-FILTER_SIZE = 3 # Taille des filtres (uniquement pour les presets 5 et 6)
+FILTER_SIZE = 3 # Taille des filtres (ne peut être différent de 3 uniquement pour les presets 5 et 6)
 
 LOSS = "gram"  # sot ou gram, si on utilise le "Sliced-Optimal Transport" (SOT) ou la loss de style classique (Gram matrix)
 

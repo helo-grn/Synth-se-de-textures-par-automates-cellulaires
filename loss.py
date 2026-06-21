@@ -46,7 +46,9 @@ VGG = get_vgg().to(device)
 
 
 def get_target_grams(img):
-    """matrices de Gram de l'image cible (texture de référence)"""
+    """
+    Récupère lesmatrices de Gram de l'image cible (texture de référence)
+    """
     grams = []
     x = normalize(img)
     for i, layer in enumerate(VGG):
@@ -57,7 +59,9 @@ def get_target_grams(img):
 
 
 def texture_loss(y_pred, target_grams, weights=[1/(64**2), 1/(128**2), 1/(256**2), 1/(512**2)]):
-    """Calcule la perte entre l'image générée et la cible"""
+    """
+    Calcule la perte entre l'image générée et la cible
+    """
     pred_grams = []
     x = normalize(y_pred)
     for i, layer in enumerate(VGG):
@@ -75,10 +79,12 @@ def texture_loss(y_pred, target_grams, weights=[1/(64**2), 1/(128**2), 1/(256**2
 ##### SOT : alternative aux matrices de Gram #####
 
 def calc_styles_vgg(imgs):
-    """extrait les features + rgb de l'image générée et de la cible pour calculer la loss SOT"""
+    """
+    Extrait les features + les canaux RGB de imgs
+    """
     b, c, h, w = imgs.shape
     x = normalize(imgs.clamp(0, 1))
-    features = [x.reshape(b, c, h * w)] #init avec rgb
+    features = [x.reshape(b, c, h * w)] # init avec RGB
 
     for i, layer in enumerate(VGG):
         x = layer(x)
@@ -90,7 +96,9 @@ def calc_styles_vgg(imgs):
 
 
 def project_sort(x, proj):
-    """Projette les features sur des directions aléatoires puis trie les valeurs en 1D"""
+    """
+    Projette les features sur des directions aléatoires puis trie les valeurs en 1D
+    """
     # x:(B, C, N), N=H*W, proj:(C, proj_n)
     #(B,C,N) -> (B,N,C) @ (C,P) -> (B,N,P) -> (B,P,N)
     return (x.permute(0, 2, 1) @ proj).permute(0, 2, 1).sort(dim=-1)[0]
@@ -100,7 +108,8 @@ def ot_loss(source, target, proj_n=32):
     """
     Perte entre deux distributions de features via la méthode Sliced Wasserstein
     Principe : on projette source et target sur proj_n directions aléatoires, on trie chaque projection, 
-    puis on mesure l'écart**2 (la distance de Wasserstein 1D entre deux distributions triées est exactement le L2 entre leurs versions triées)."""
+    puis on mesure l'écart**2 (la distance de Wasserstein 1D entre deux distributions triées est exactement le L2 entre leurs versions triées).
+    """
     ch = source.shape[1]
 
     projs = torch.randn(ch, proj_n, device=source.device)
@@ -114,9 +123,14 @@ def ot_loss(source, target, proj_n=32):
 
 
 def texture_loss_sot(y_pred, target_img):
+    """
+    Calcule la loss entre l'image générée et la cible via la méthode SOT
+    """
+
+    # Extrait les features + les canaux RGB de l'image générée et de la cible pour calculer la loss SOT
     pred_styles   = calc_styles_vgg(y_pred)
     target_styles = calc_styles_vgg(target_img)
 
-    #detach la cible car pas de gradient sur l'image de ref
+    # detach la cible car pas de gradient sur l'image de ref
     loss = sum(ot_loss(p, t.detach()) for p, t in zip(pred_styles, target_styles))
     return loss
